@@ -327,7 +327,7 @@ class Form extends Generic implements Xyl\Element\Executable
 
             $names[$name][] = $_element;
         }
-        
+
         foreach ($data as $index => $datum) {
             if (!is_array($datum)) {
                 if (!isset($names[$index])) {
@@ -382,7 +382,6 @@ class Form extends Generic implements Xyl\Element\Executable
                 unset($flat[$key]);
                 unset($names[$key]);
 
-                continue;
             }
 
         }
