@@ -304,10 +304,22 @@ class Form extends Generic implements Xyl\Element\Executable
         $elements   = $this->getElements();
         $names      = [];
         $validation = [];
+        $nameIterator = [];
 
         foreach ($elements as &$_element) {
             $_element = $this->getConcreteElement($_element);
             $name     = $_element->readAttribute('name');
+
+            $bracketPos = strpos($name, '[');
+            if(false !== $bracketPos) {
+
+                if(!array_key_exists($name, $nameIterator))
+                    $nameIterator[$name] = 0 ;
+                else
+                    $nameIterator[$name]++ ;
+
+                $name = substr($name,0,$bracketPos) . '[' . intval($nameIterator[$name]).']';
+            }
 
             if (!isset($names[$name])) {
                 $names[$name] = [];
@@ -315,7 +327,7 @@ class Form extends Generic implements Xyl\Element\Executable
 
             $names[$name][] = $_element;
         }
-
+        
         foreach ($data as $index => $datum) {
             if (!is_array($datum)) {
                 if (!isset($names[$index])) {
@@ -352,12 +364,6 @@ class Form extends Generic implements Xyl\Element\Executable
                 continue;
             }
 
-            $validation[$index] = false;
-
-            /*
-            print_r($flat);
-            print_r($validation);
-
             $remainder = array();
 
             foreach($datum as $key => &$value) {
@@ -375,10 +381,10 @@ class Form extends Generic implements Xyl\Element\Executable
                 $validation[$key] = $names[$key][0]->isValid($revalid, $value);
                 unset($flat[$key]);
                 unset($names[$key]);
+
+                continue;
             }
 
-            print_r($remainder);
-            */
         }
 
         foreach ($names as $name => $element) {
