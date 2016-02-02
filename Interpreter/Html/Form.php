@@ -305,20 +305,19 @@ class Form extends Generic implements Xyl\Element\Executable
         $names      = [];
         $validation = [];
         $nameIterator = [];
-
         foreach ($elements as &$_element) {
             $_element = $this->getConcreteElement($_element);
             $name     = $_element->readAttribute('name');
 
-            $bracketPos = strpos($name, '[');
-            if(false !== $bracketPos) {
+            $bracketPosition = strpos($name, '[');
+            if(false !== $bracketPosition) {
 
                 if(!array_key_exists($name, $nameIterator))
                     $nameIterator[$name] = 0 ;
                 else
                     $nameIterator[$name]++ ;
 
-                $name = substr($name,0,$bracketPos) . '[' . intval($nameIterator[$name]).']';
+                $name = substr($name,0,$bracketPosition) . '[' . intval($nameIterator[$name]).']';
             }
 
             if (!isset($names[$name])) {
