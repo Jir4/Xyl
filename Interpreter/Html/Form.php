@@ -301,23 +301,23 @@ class Form extends Generic implements Xyl\Element\Executable
             return $this->_validity = false;
         }
 
-        $elements   = $this->getElements();
-        $names      = [];
-        $validation = [];
+        $elements     = $this->getElements();
+        $names        = [];
+        $validation   = [];
         $nameIterator = [];
         foreach ($elements as &$_element) {
             $_element = $this->getConcreteElement($_element);
             $name     = $_element->readAttribute('name');
 
             $bracketPosition = strpos($name, '[');
-            if(false !== $bracketPosition) {
-
-                if(!array_key_exists($name, $nameIterator))
+            if (false !== $bracketPosition) {
+                if (!array_key_exists($name, $nameIterator)) {
                     $nameIterator[$name] = 0 ;
-                else
+                } else {
                     $nameIterator[$name]++ ;
+                }
 
-                $name = substr($name,0,$bracketPosition) . '[' . intval($nameIterator[$name]).']';
+                $name = substr($name, 0, $bracketPosition) . '[' . intval($nameIterator[$name]) . ']';
             }
 
             if (!isset($names[$name])) {
@@ -363,14 +363,12 @@ class Form extends Generic implements Xyl\Element\Executable
                 continue;
             }
 
-            $remainder = array();
+            $remainder = [];
 
-            foreach($datum as $key => &$value) {
-
+            foreach ($datum as $key => &$value) {
                 $key = key($flat);
 
-                if(!isset($names[$key])) {
-
+                if (!isset($names[$key])) {
                     $remainder[] = $key;
                     next($flat);
 
@@ -380,9 +378,7 @@ class Form extends Generic implements Xyl\Element\Executable
                 $validation[$key] = $names[$key][0]->isValid($revalid, $value);
                 unset($flat[$key]);
                 unset($names[$key]);
-
             }
-
         }
 
         foreach ($names as $name => $element) {
